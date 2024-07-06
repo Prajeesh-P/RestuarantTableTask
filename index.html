@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Creator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+
+</head>
+
+<body>
+    <div class="header">
+        <button id="createTableBtn" class="blue-button">Add Table</button>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+            <div class="search-icon">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="tableForm">
+                <label for="tableName" class="heading">Table Name</label>
+                <input type="text" id="tableName" name="tableName" placeholder="Table Name" required><br>
+                <label for="tableType" class="heading">Description</label>
+                <textarea id="tableType" name="tableType" placeholder="Description" rows="4" required></textarea><br>
+                <div class="seat-selector">
+                    <label for="seats" class="heading">No of Seats</label>
+                    <div class="seat-input">
+                        <span class="plus">+</span>
+                        <span class="num" id="seatsNumber">01</span>
+                        <span class="minus">-</span>
+                    </div>
+                </div><br><br>
+                <label for="tableDesign" class="heading">Table Design:</label>
+                <div class="table-design">
+                    <label>
+                        <input type="radio" name="tableDesign" value="design1">
+                        <img src="8seatTableImg.png" alt="Design 1" class="design-image">
+                    </label>
+                    <label>
+                        <input type="radio" name="tableDesign" value="design2" checked>
+                        <img src="4seatTableImg.png" alt="Design 2" class="design-image">
+                    </label>
+                </div><br>
+                <button type="submit" class="blue-button full-width">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="tableContainer" class="tableContainer"></div>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>

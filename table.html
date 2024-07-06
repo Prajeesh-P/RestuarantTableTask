@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .table-shape {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .circle,
+        .rectangle {
+            background-color: #ccc;
+            position: relative;
+        }
+
+        .circle {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+
+        .rectangle {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 250px;
+            background-color: #ccc;
+        }
+
+        .seat {
+            width: 80px;
+            height: 30px;
+            background-color: #fff;
+            border: 1px solid #000;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+        .table-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="seatShapeContainer" class="table-shape">
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var tableType = urlParams.get('tableType');
+            var tableName = urlParams.get('name');
+            var seats = parseInt(urlParams.get('seats')); 
+
+
+            var seatShapeContainer = document.getElementById("seatShapeContainer");
+
+            var shapeDiv;
+            if (tableType === 'circle') {
+                shapeDiv = document.createElement("div");
+                shapeDiv.classList.add("circle");
+                seatShapeContainer.appendChild(shapeDiv);
+
+                var spanElement = document.createElement("span");
+                spanElement.classList.add("table-name");
+                spanElement.textContent = `${tableName}`; 
+
+                shapeDiv.appendChild(spanElement);
+                positionSeatsAroundCircle(seats, shapeDiv);
+            } else if (tableType === 'rectangle') {
+                shapeDiv = document.createElement("div");
+                shapeDiv.classList.add("rectangle");
+                seatShapeContainer.appendChild(shapeDiv);
+
+                var spanElement = document.createElement("span");
+                spanElement.classList.add("table-name");
+                spanElement.textContent = `${tableName}`; 
+
+                shapeDiv.appendChild(spanElement);
+
+                positionSeatsAroundRectangle(seats, shapeDiv);
+            } else {
+                shapeDiv = document.createElement("div");
+                shapeDiv.textContent = "Seat representation not available";
+                seatShapeContainer.appendChild(shapeDiv);
+            }
+        });
+
+        function positionSeatsAroundCircle(seatCount, shape, tableName) {
+            var tableNameElement = document.createElement("div");
+            tableNameElement.classList.add("table-name");
+            tableNameElement.textContent = tableName;
+            shape.appendChild(tableNameElement);
+
+            tableNameElement.style.position = "absolute";
+            tableNameElement.style.top = "50%";
+            tableNameElement.style.left = "50%";
+            tableNameElement.style.transform = "translate(-50%, -50%)";
+            tableNameElement.style.textAlign = "center";
+            tableNameElement.style.fontWeight = "bold";
+
+            for (var i = 0; i < seatCount; i++) {
+                var seat = document.createElement("div");
+                seat.classList.add("seat");
+                seat.textContent = `${(i + 1).toString().padStart(2, '0')}`;
+                shape.appendChild(seat);
+
+                var angle = (360 / seatCount) * i;
+                var radian = angle * (Math.PI / 180);
+                var x = 50 + 70 * Math.cos(radian); 
+                var y = 50 + 70 * Math.sin(radian); 
+
+                seat.style.position = "absolute";
+                seat.style.left = `calc(${x}% - 40px)`;
+                seat.style.top = `calc(${y}% - 15px)`; 
+            }
+        }
+
+        function positionSeatsAroundRectangle(seatCount, shape, tableName) {
+            var tableNameElement = document.createElement("div");
+            tableNameElement.classList.add("table-name");
+            tableNameElement.textContent = tableName;
+            shape.appendChild(tableNameElement);
+
+            tableNameElement.style.position = "absolute";
+            tableNameElement.style.top = "50%";
+            tableNameElement.style.left = "50%";
+            tableNameElement.style.transform = "translate(-50%, -50%)";
+            tableNameElement.style.textAlign = "center";
+            tableNameElement.style.fontWeight = "bold";
+
+            var perimeter = 2 * (shape.offsetWidth + shape.offsetHeight);
+            var seatSpacing = perimeter / seatCount;
+
+            for (var i = 0; i < seatCount; i++) {
+                var seat = document.createElement("div");
+                seat.classList.add("seat");
+                seat.textContent = `${(i + 1).toString().padStart(2, '0')}`;
+                shape.appendChild(seat);
+
+                var position = seatSpacing * i;
+                if (position < shape.offsetWidth) {
+                    // Top edge
+                    seat.style.position = "absolute";
+                    seat.style.left = `${position}px`;
+                    seat.style.top = `-45px`;
+                } else if (position < shape.offsetWidth + shape.offsetHeight) {
+                    // Right edge
+                    seat.style.position = "absolute";
+                    seat.style.left = `${shape.offsetWidth + 20}px`;
+                    seat.style.top = `${position - shape.offsetWidth}px`;
+                } else if (position < 2 * shape.offsetWidth + shape.offsetHeight) {
+                    // Bottom edge
+                    seat.style.position = "absolute";
+                    seat.style.left = `${2 * shape.offsetWidth + shape.offsetHeight - position}px`;
+                    seat.style.top = `${shape.offsetHeight + 20}px`;
+                } else {
+                    // Left edge
+                    seat.style.position = "absolute";
+                    seat.style.left = `-100px`;
+                    seat.style.top = `${perimeter - position}px`;
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
